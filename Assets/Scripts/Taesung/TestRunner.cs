@@ -26,7 +26,7 @@ public class TestRunner : MonoBehaviour
             int randomScore = Random.Range(1000, 9999);
 
             // 3. 네트워킹 매니저 찾기
-            NetworkManager networkManager = FindObjectOfType<NetworkManager>();
+            NetworkManager networkManager = FindAnyObjectByType<NetworkManager>();
 
             if (networkManager != null)
             {
