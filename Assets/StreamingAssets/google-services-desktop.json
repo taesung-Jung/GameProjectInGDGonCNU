@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "327081563192",
+    "project_id": "gameprojectingdgoncnu2026",
+    "storage_bucket": "gameprojectingdgoncnu2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327081563192:android:a5213752fea395cf9f82cd",
+        "android_client_info": {
+          "package_name": "com.firebase.gameprojectinGDGonCNU"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN-Gx3pyCTFTETUAchwRam7FogliYTork"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
