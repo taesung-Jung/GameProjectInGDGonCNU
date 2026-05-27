@@ -27,18 +27,6 @@ public class RunState : IPlayerState
         {
             player.ChangeState(new SlideState(player));
         }
-
-        // f 버튼 클릭 시 비행 상태로 변경
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            player.ChangeState(new FlightState(player));
-        }
-
-        // b 버튼 클릭 시 공격 상태로 변경
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            player.ChangeState(new BreakState(player, null));
-        }
     }
 
     public void UpdateState() { }

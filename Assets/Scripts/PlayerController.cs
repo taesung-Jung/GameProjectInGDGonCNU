@@ -56,11 +56,21 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Dead")) Die();
 
+        if (other.CompareTag("Obstacle"))
+        {
+            Die();
+        }
+
     // 추가: 벽 파괴 구역(Trigger)에 닿으면 BreakState 진입
         if (other.CompareTag("BreakZone"))
         {
             // 장애물이 아직 없으므로 임시로 null 넘김
             ChangeState(new BreakState(this, null));
+        }
+
+        if (other.CompareTag("FlightZone"))
+        {
+            ChangeState(new FlightState(this));
         }
     }
 }
