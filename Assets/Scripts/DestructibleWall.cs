@@ -1,39 +1,12 @@
 using UnityEngine;
 
+// ì´ë¦„ë§Œ ë§ì¶°ì£¼ëŠ” ì„ì‹œ ìŠ¤í¬ë¦½íŠ¸ì…ë‹ˆë‹¤.
 public class DestructibleWall : MonoBehaviour
 {
-    public int hp = 15; // ºÎ¼ö±â À§ÇØ ÇÊ¿äÇÑ Å¬¸¯(¿¬Å¸) È½¼ö
-
-    //  °¨µ¶ ÂüÁ¶¿ë º¯¼ö
-    private MapManager mapManager;
-
-    void Start()
+    // BreakStateì—ì„œ í˜¸ì¶œí•˜ëŠ” í•¨ìˆ˜ ì´ë¦„ë§Œ ë§Œë“¤ì–´ ë‘¡ë‹ˆë‹¤.
+    public bool TakeDamage()
     {
-        //  ¾À¿¡ ÀÖ´Â MapManager¸¦ ÀÚµ¿À¸·Î Ã£¾Æ ¿¬°áÇÕ´Ï´Ù.
-        mapManager = FindObjectOfType<MapManager>();
-        if (mapManager == null) Debug.LogError("DestructibleWall: ¾À¿¡ MapManager°¡ ¾ø½À´Ï´Ù!");
-    }
-
-    // PlayerController¿¡¼­ ¿¬Å¸¸¦ °¨ÁöÇÏ¸é ºÎ¸¦ ÇÔ¼ö
-    public void TakeDamage()
-    {
-        if (hp <= 0) return; // ÀÌ¹Ì ÆÄ±« ÁßÀÌ¸é Áßº¹ ½ÇÇà ¹æÁö
-
-        hp--; // Ã¼·Â 1 °¨¼Ò
-
-        // Å¸°İ°¨ È¿°ú (µÚ·Î »ìÂ¦ ¹Ğ¸®±â)
-        transform.position += new Vector3(0.2f, 0, 0);
-
-        if (hp <= 0)
-        {
-            //  (ÇÙ½É) ÀÚ½ÅÀ» ÆÄ±«ÇÏ±â Àü¿¡ °¨µ¶¿¡°Ô º¸°í!
-            if (mapManager != null)
-            {
-                mapManager.EndWallMode();
-            }
-
-            // Ã¼·ÂÀÌ 0ÀÌ µÇ¸é ÆÄ±«!
-            Destroy(gameObject);
-        }
+        Debug.Log("ì„ì‹œ ë²½: ë°ë¯¸ì§€ ë°›ìŒ!");
+        return true; // ì¼ë‹¨ í´ë¦­ í•œ ë²ˆì— ë¬´ì¡°ê±´ ë¶€ì„œì§€ëŠ” ê²ƒìœ¼ë¡œ ì²˜ë¦¬
     }
 }
