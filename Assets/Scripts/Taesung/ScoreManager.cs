@@ -1,30 +1,31 @@
 using UnityEngine;
 using System;
-using System.Collections; // ÄÚ·çÆ¾ »ç¿ëÀ» À§ÇØ ÇÊ¿ä
-using TMPro; // TextMeshPro »ç¿ë
+using System.Collections;
+using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
+    // ì ìˆ˜ ê´€ë¦¬ ë° ì ìˆ˜ ë³€ê²½ ì´ë²¤íŠ¸ë¥¼ ë‹´ë‹¹í•˜ëŠ” ì‹±ê¸€í†¤ í´ë˜ìŠ¤
     public static event Action<int> OnScoreChanged;
     public static ScoreManager Instance { get; private set; }
 
-    public TMP_Text scoreText; // Á¡¼ö¸¦ Ç¥½ÃÇÒ ÅØ½ºÆ® ÄÄÆ÷³ÍÆ®
+    public TMP_Text scoreText; // ì ìˆ˜ ì¶œë ¥ Text ì°½
 
     [Header("Settings")]
-    [SerializeField] private int scorePerInterval = 1; // ÇÑ ¹ø¿¡ ¿Ã¸± Á¡¼ö
-    [SerializeField] private float intervalTime = 1f;  // Á¡¼ö°¡ ¿À¸£´Â ½Ã°£ °£°İ (1ÃÊ)
+    [SerializeField] private int scorePerInterval = 1; // ì¼ì • ì‹œê°„ë§ˆë‹¤ ì¶”ê°€ë˜ëŠ” ì ìˆ˜ (1ì )
+    [SerializeField] private float intervalTime = 1f;  // ì ìˆ˜ ì¶”ê°€ ê°„ê²© (1ì´ˆ)
 
-    private int currentScore = 0;
-    private Coroutine scoreCoroutine;
+    private int currentScore = 0; // í˜„ì¬ ì ìˆ˜
+    private Coroutine scoreCoroutine; // ì ìˆ˜ ì¶”ê°€ ì½”ë£¨í‹´
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ÆĞÅÏ
+        // ì‹±ê¸€í†¤ ê´€ë¦¬
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    // °ÔÀÓ ½ÃÀÛ ½Ã ÀÌ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© Á¡¼ö Áõ°¡ ½ÃÀÛ
+    // ì¼ì • ì‹œê°„ë§ˆë‹¤ ì ìˆ˜ë¥¼ ì¶”ê°€í•˜ëŠ” ì½”ë£¨í‹´ ì‹œì‘
     public void StartScoring()
     {
         if (scoreCoroutine == null)
@@ -33,7 +34,7 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    // °ÔÀÓ ¿À¹ö ½Ã ÀÌ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© Á¡¼ö Áõ°¡ ÁßÁö
+    // ì ìˆ˜ ì¶”ê°€ ì½”ë£¨í‹´ ì¤‘ì§€
     public void StopScoring()
     {
         if (scoreCoroutine != null)
@@ -43,29 +44,30 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    // ¼³Á¤ÇÑ °£°İ¸¶´Ù Á¡¼ö¸¦ Ãß°¡ÇÏ´Â ÄÚ·çÆ¾
+    // ì¼ì • ì‹œê°„ë§ˆë‹¤ ì ìˆ˜ë¥¼ ì¶”ê°€í•˜ëŠ” ì½”ë£¨í‹´
     private IEnumerator AddScoreOverTime()
     {
-        while (true) // ¸ØÃâ ¶§±îÁö ¹«ÇÑ ¹İº¹
+        // ë¬´í•œ ë£¨í”„ë¥¼ ëŒë©´ì„œ ì¼ì • ì‹œê°„ë§ˆë‹¤ ì ìˆ˜ ì¶”ê°€
+        while (true)
         {
-            yield return new WaitForSeconds(intervalTime); // ¼³Á¤ÇÑ °£°İ¸¸Å­ ´ë±â
-            AddScore(scorePerInterval); // Á¤¼ö Á¡¼ö °¡»ê
+            yield return new WaitForSeconds(intervalTime); // ì¼ì • ì‹œê°„ ëŒ€ê¸°
+            AddScore(scorePerInterval); // ì ìˆ˜ ì¶”ê°€
 
-            scoreText.text = "" + currentScore; // Á¡¼ö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+            scoreText.text = "" + currentScore; // ì ìˆ˜ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
         }
     }
 
-    // ÃÖÁ¾ Á¡¼ö¸¦ ¹İÈ¯
+    // ìµœì¢… ì ìˆ˜ ë°˜í™˜
     public int GetFinalScore() => currentScore;
 
-    // ¿ÜºÎ¿¡¼­ Á¡¼ö¸¦ Ãß°¡ÇÒ ¶§ È£Ãâ
+    // ì ìˆ˜ ì¶”ê°€ ë©”ì„œë“œ
     public void AddScore(int amount)
     {
         currentScore += amount;
         OnScoreChanged?.Invoke(currentScore);
     }
 
-    // °ÔÀÓÀ» ¸®¼ÂÇÒ ¶§ Á¡¼ö¸¦ ÃÊ±âÈ­
+    // ì ìˆ˜ ì´ˆê¸°í™” ë©”ì„œë“œ
     public void ResetScore()
     {
         currentScore = 0;
