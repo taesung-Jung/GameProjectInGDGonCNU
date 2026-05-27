@@ -5,17 +5,20 @@ using UnityEngine.SceneManagement;
 public class Timer : MonoBehaviour
 {
     Scenemanager Scene;
-    double time;
+    public double time;
 
     void Start()
     {
-        Scene = GameObject.Find("SceneCanvas").GetComponent<Scenemanager>();
+        
     }
     void Update()
     {
+        Scene = GameObject.Find("SceneCanvas").GetComponent<Scenemanager>();
         if (Scene.ready)
             return;
+        if (Scene.End)
+            return;
         time += Time.deltaTime;
-        transform.GetComponent<TextMeshProUGUI>().text = string.Format("{0:F2}", time);
+        transform.GetComponent<TextMeshProUGUI>().text = string.Format("{0}", (int)time);
     }
 }

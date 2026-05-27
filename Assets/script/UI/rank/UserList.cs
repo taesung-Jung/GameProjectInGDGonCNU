@@ -1,59 +1,39 @@
 using UnityEngine;
 using System.Collections.Generic;
-using TMPro; // 꼭 필요!
 
 
 public class UserList : MonoBehaviour
 {
-    public List<UserInfo> users = new List<UserInfo>();
     public GameObject recordPrefab;
-
+        
     void Update()
     {
         Ranking_Arrange();
     }
-    void Awake()
+    void OnEnable()
     {
-        
-        add_user("hello", 10f);
-        add_user("hello2", 20f);
-        add_user("hello3", 5f);
-        add_user("hello7", 1f);
-        Debug.Log(users[2].UserName);
-        
+        GameObject.Find("NetworkManager").GetComponent<NetworkManager>().FetchLeaderboard(add_user);
     }
     void Ranking_Arrange()
     {
         Transform content = transform.GetChild(0).GetChild(0).transform;
+        
         for (int i = 0; i < content.childCount; i++)
         {
+            if (i > 3)
+            {
+                content.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 110f);
+            }
             content.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -20 + -110*i);
         }
     }
-    public void add_user(string username, float time)
+    public void add_user(List<UserData> list)
     {
-        for (int i = 0; i < users.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            if (users[i].UserName == username)
-            {
-                users[i].Time = time;
-                return;
-            }
+            GameObject prefab = Instantiate(recordPrefab, transform.GetChild(0).GetChild(0).transform);
+            prefab.GetComponent<RankSet>().SetNum = i;
         }
-        users.Add(new UserInfo(username, time));
-        GameObject prefab = Instantiate(recordPrefab, transform.GetChild(0).GetChild(0).transform);
-        prefab.GetComponent<RankSet>().SetNum = users.Count -1;
-    }
-}
-
-public class UserInfo
-{
-    public string UserName;
-    public float Time;
-
-    public UserInfo(string username, float time)
-    {
-        UserName = username;
-        Time = time;
+        
     }
 }

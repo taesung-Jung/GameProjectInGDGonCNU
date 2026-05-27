@@ -133,8 +133,6 @@ GameObject:
   - component: {fileID: 46438351}
   - component: {fileID: 46438355}
   - component: {fileID: 46438356}
-  - component: {fileID: 46438357}
-  - component: {fileID: 46438358}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -253,31 +251,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::rank
   rankpanel: {fileID: 1540757511}
---- !u!114 &46438357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 46438350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe2ddabe510cf448bc810f8e5002e4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Setting
-  settingpanel: {fileID: 1281219145}
---- !u!114 &46438358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 46438350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c32ab49019809b04fb634cf5db467fff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Quit
 --- !u!1 &119474304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1223,10 +1196,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 210622014}
+  - {fileID: 2040702481}
   - {fileID: 1325482860}
   - {fileID: 356385898}
   - {fileID: 1114865464}
-  - {fileID: 2040702481}
   m_Father: {fileID: 1281219146}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1634,7 +1607,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -2051,19 +2023,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1115288484}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 46438358}
-        m_TargetAssemblyTypeName: Quit, Assembly-CSharp
-        m_MethodName: QuitGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1115288484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2390,7 +2350,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1281219146
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2783,7 +2743,7 @@ RectTransform:
   m_Father: {fileID: 1114865464}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2916,50 +2876,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e86ca71fb604d74a87b3d8dfe8c15e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Close
---- !u!1 &1568912756
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1568912758}
-  - component: {fileID: 1568912757}
-  m_Layer: 0
-  m_Name: NetworkManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1568912757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568912756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96498f47fb69e894cafb7709524a3aae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkManager
---- !u!4 &1568912758
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568912756}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 687, y: 320, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1572322544
 GameObject:
   m_ObjectHideFlags: 0
@@ -3616,7 +3532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63947a29d68fe3c48be63111db8902cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Loading
-  loading: 0
   speed: 10
 --- !u!114 &1889560421
 MonoBehaviour:
@@ -3630,11 +3545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e420aabc02825b94d89d4335d0c5083b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scenemanager
-  gameOver_prefab: {fileID: 7178807388194301197, guid: 65f558d4c26ef51448a140258ac74220, type: 3}
   UserName: 
   Time: 0
   ready: 0
-  End: 0
 --- !u!114 &1889560422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3801,19 +3714,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2029647224}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 46438357}
-        m_TargetAssemblyTypeName: Setting, Assembly-CSharp
-        m_MethodName: settingpanelEmerge
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2029647224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4022,7 +3923,7 @@ RectTransform:
   m_Father: {fileID: 356385898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4072,4 +3973,3 @@ SceneRoots:
   - {fileID: 46438354}
   - {fileID: 274813238}
   - {fileID: 1889560425}
-  - {fileID: 1568912758}

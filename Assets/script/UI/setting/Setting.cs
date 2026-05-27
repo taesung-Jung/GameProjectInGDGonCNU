@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class Setting : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    GameObject scene;
+    public GameObject settingpanel;
     void Update()
     {
-        
+        scene = GameObject.Find("SceneCanvas");
+    }
+    public void settingpanelEmerge()
+    {
+        if (scene.GetComponent<Loading>().loading) 
+            return;
+        settingpanel.SetActive(true);
     }
 }

@@ -10,32 +10,32 @@
 
 //    void Start()
 //    {
-//        // 1. Firebase ÀÇÁ¸¼º Ã¼Å© ¹× ÃÊ±âÈ­
+//        // 1. Firebase ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å© ï¿½ï¿½ ï¿½Ê±ï¿½È­
 //        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
 //            DependencyStatus dependencyStatus = task.Result;
 
 //            if (dependencyStatus == DependencyStatus.Available)
 //            {
-//                // 2. !!! Áß¿ä !!! º¹»çÇÑ URLÀ» ¿©±â¿¡ ³ÖÀ¸¼¼¿ä.
-//                // ¸¸¾à DefaultInstance°¡ ¿¡·¯³­´Ù¸é GetInstance("º¹»çÇÑURL")À» »ç¿ëÇÕ´Ï´Ù.
+//                // 2. !!! ï¿½ß¿ï¿½ !!! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ URLï¿½ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+//                // ï¿½ï¿½ï¿½ï¿½ DefaultInstanceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½ GetInstance("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½URL")ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 //                string databaseUrl = "https://gameprojectingdgoncnu2026-default-rtdb.firebaseio.com/";
 
 //                FirebaseApp app = FirebaseApp.DefaultInstance;
 
-//                // URLÀ» ¸í½ÃÀûÀ¸·Î ÁöÁ¤ÇÏ¿© ÀÎ½ºÅÏ½º °¡Á®¿À±â
+//                // URLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //                DatabaseReference reference = FirebaseDatabase.GetInstance(app, databaseUrl).RootReference;
 
 //                dbRef = reference;
-//                Debug.Log("Firebase Database ¿¬°á ¼º°ø!");
+//                Debug.Log("Firebase Database ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 //            }
 //            else
 //            {
-//                Debug.LogError($"Firebase ÀÇÁ¸¼ºÀ» ÇØ°áÇÒ ¼ö ¾ø½À´Ï´Ù: {dependencyStatus}");
+//                Debug.LogError($"Firebase ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: {dependencyStatus}");
 //            }
 //        });
 //    }
 
-//    // Á¡¼ö Àü¼Û
+//    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //    public void UploadScore(string playerName, int score)
 //    {
 //        UserData data = new UserData(playerName, score);
@@ -46,15 +46,15 @@
 //        dbRef.Child("rankings").Child(userId).SetRawJsonValueAsync(json);
 //    }
 
-//    // ·©Å· ¸®½ºÆ® ¼ö½Å
+//    // ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 //    public void FetchLeaderboard(System.Action<List<UserData>> onLoaded)
 //    {
 //        dbRef.Child("rankings").OrderByChild("score").LimitToLast(10)
 //            .GetValueAsync().ContinueWithOnMainThread(task => {
 //                if (task.IsCompleted)
 //                {
-//                    // µ¥ÀÌÅÍ ÆÄ½Ì ¹× Á¤·Ä ·ÎÁ÷ ÈÄ Äİ¹é Àü´Ş
-//                    // (À§¿¡¼­ ¼³¸íÇÑ ¸®½ºÆ® º¯È¯ ·ÎÁ÷ »ç¿ë)
+//                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½İ¹ï¿½ ï¿½ï¿½ï¿½ï¿½
+//                    // (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
 //                }
 //            });
 //    }
@@ -68,61 +68,96 @@ using UnityEngine;
 
 public class NetworkManager : MonoBehaviour
 {
+    public static NetworkManager Instance;
     private DatabaseReference dbRef;
-
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
     void Start()
     {
-        // Firebase ÀÇÁ¸¼º Ã¼Å©
+        // Firebase ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
             DependencyStatus dependencyStatus = task.Result;
 
             if (dependencyStatus == DependencyStatus.Available)
             {
-                // ScriptableObject ¿¡¼Â ·Îµå
-                // ¹İµå½Ã Resources/Config Æú´õ ¾È¿¡ FirebaseConfig.asset ÀÌ ÀÖ¾î¾ß ÇÔ
+                // ScriptableObject ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
+                // ï¿½İµï¿½ï¿½ Resources/Config ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ FirebaseConfig.asset ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½
                 FirebaseConfig config = Resources.Load<FirebaseConfig>("Config/FirebaseConfig");
 
                 if (config == null)
                 {
-                    Debug.LogError("[NetworkManager] Resources/Config/FirebaseConfig ¿¡¼ÂÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù! " +
-                                   "Resources Æú´õ¿¡ FirebaseConfig.asset À» »ı¼ºÇØÁÖ¼¼¿ä.");
+                    Debug.LogError("[NetworkManager] Resources/Config/FirebaseConfig ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! " +
+                                   "Resources ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ FirebaseConfig.asset ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
                     return;
                 }
 
-                // Firebase ÀÎ½ºÅÏ½º »ı¼º (URLÀ» Á÷Á¢ Àü´Ş)
+                // Firebase ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½ (URLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 dbRef = FirebaseDatabase.GetInstance(app, config.databaseUrl).RootReference;
 
-                Debug.Log($"[NetworkManager] Firebase Database ¿¬°á ¼º°ø! URL: {config.databaseUrl}");
+                Debug.Log($"[NetworkManager] Firebase Database ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! URL: {config.databaseUrl}");
             }
             else
             {
-                Debug.LogError($"[NetworkManager] Firebase ÀÇÁ¸¼ºÀ» ÇØ°áÇÒ ¼ö ¾ø½À´Ï´Ù: {dependencyStatus}");
+                Debug.LogError($"[NetworkManager] Firebase ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: {dependencyStatus}");
             }
         });
     }
 
     // -------------------------------------------------
-    // Á¡¼ö Àü¼Û
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void UploadScore(string playerName, int score)
     {
-        if (dbRef == null) { Debug.LogError("[NetworkManager] DB°¡ ÃÊ±âÈ­µÇÁö ¾Ê¾Ò½À´Ï´Ù."); return; }
-
-        UserData data = new UserData(playerName, score);
-        string json = JsonUtility.ToJson(data);
         string userId = SystemInfo.deviceUniqueIdentifier;
+        dbRef.Child("rankings").Child(userId).GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("ê¸°ì¡´ ì ìˆ˜ í™•ì¸ ì‹¤íŒ¨");
+                    return;
+                }
 
-        dbRef.Child("rankings").Child(userId).SetRawJsonValueAsync(json)
-            .ContinueWithOnMainThread(t => {
-                if (t.IsCompleted) Debug.Log("[NetworkManager] Á¡¼ö ¾÷·Îµå ¿Ï·á!");
+                DataSnapshot snapshot = task.Result;
+
+                int oldScore = 0;
+
+                if (snapshot.Exists && snapshot.Child("score").Exists)
+                {
+                    oldScore = int.Parse(snapshot.Child("score").Value.ToString());
+                }
+
+                if (score > oldScore)
+                {
+                    UserData data = new UserData(playerName, score);
+                    string json = JsonUtility.ToJson(data);
+
+                    dbRef.Child("rankings").Child(userId).SetRawJsonValueAsync(json);
+
+                    Debug.Log("ìµœê³  ì ìˆ˜ ê°±ì‹ !");
+                }
+                else
+                {
+                    Debug.Log("ê¸°ì¡´ ì ìˆ˜ê°€ ë” ë†’ì•„ì„œ ì €ì¥ ì•ˆ í•¨");
+                }
             });
     }
 
     // -------------------------------------------------
-    // ·©Å· ¸®½ºÆ® ¹Ş¾Æ¿À±â (Äİ¹é ÇüÅÂ)
+    // ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ş¾Æ¿ï¿½ï¿½ï¿½ (ï¿½İ¹ï¿½ ï¿½ï¿½ï¿½ï¿½)
     public void FetchLeaderboard(System.Action<List<UserData>> onLoaded)
     {
-        if (dbRef == null) { Debug.LogError("[NetworkManager] DB°¡ ÃÊ±âÈ­µÇÁö ¾Ê¾Ò½À´Ï´Ù."); return; }
+        if (dbRef == null) { Debug.LogError("[NetworkManager] DBï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½."); return; }
 
         dbRef.Child("rankings")
              .OrderByChild("score")
@@ -131,7 +166,7 @@ public class NetworkManager : MonoBehaviour
              .ContinueWithOnMainThread(task => {
                  if (task.IsFaulted)
                  {
-                     Debug.LogError("[NetworkManager] ·©Å· µ¥ÀÌÅÍ¸¦ ¹Ş¾Æ¿À´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+                     Debug.LogError("[NetworkManager] ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ş¾Æ¿ï¿½ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
                      return;
                  }
 
@@ -145,7 +180,7 @@ public class NetworkManager : MonoBehaviour
                      list.Add(user);
                  }
 
-                 // ³ôÀº Á¡¼ö ¼øÀ¸·Î ³»¸²Â÷¼ø Á¤·Ä
+                 // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                  list.Reverse();
                  onLoaded?.Invoke(list);
              });
