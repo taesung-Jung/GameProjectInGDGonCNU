@@ -1,0 +1,11 @@
+using UnityEngine;
+
+public class Quit : MonoBehaviour
+{
+    public void QuitGame()
+    {
+        Debug.Log("게임 종료");
+
+        Application.Quit();
+    }
+}
