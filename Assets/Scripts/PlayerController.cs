@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public AudioSource audioSource;
     [HideInInspector] public CircleCollider2D circleCollider;
 
-    private IPlayerState currentState; // 현재 어떤 상태인지 저장
+    private IPlayerState currentState;
     public bool isDead = false;
 
     void Awake()
@@ -54,9 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) return;
 
-        if (other.CompareTag("Dead")) Die();
-
-        if (other.CompareTag("Obstacle"))
+        if (other.CompareTag("Dead") || other.CompareTag("Obstacle"))
         {
             Die();
         }
