@@ -1,48 +1,48 @@
-using System.Collections.Generic; // Å¥(Queue)¸¦ »ç¿ëÇÏ±â À§ÇØ ÇÊ¿äÇÕ´Ï´Ù.
+ï»¿using System.Collections.Generic; // í(Queue)ë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í•„ìš”í•©ë‹ˆë‹¤.
 using UnityEngine;
 
 public class PoolManager : MonoBehaviour
 {
-    // ÆÄÀÌ½ãÀÇ Å¬·¡½º ¿øº»Ã³·³ ¾²ÀÏ ÇÁ¸®ÆÕÀ» ³ÖÀ» °ø°£ÀÔ´Ï´Ù.
+    // íŒŒì´ì¬ì˜ í´ë˜ìŠ¤ ì›ë³¸ì²˜ëŸ¼ ì“°ì¼ í”„ë¦¬íŒ¹ì„ ë„£ì„ ê³µê°„ì…ë‹ˆë‹¤.
     public GameObject platformPrefab;
     public int poolSize = 20;
 
-    // ÆÄÀÌ½ãÀÇ ¸®½ºÆ®(´ë±â¿­)¿Í °°Àº ¿ªÇÒÀÎ Queue¸¦ ¸¸µì´Ï´Ù.
+    // íŒŒì´ì¬ì˜ ë¦¬ìŠ¤íŠ¸(ëŒ€ê¸°ì—´)ì™€ ê°™ì€ ì—­í• ì¸ Queueë¥¼ ë§Œë“­ë‹ˆë‹¤.
     private Queue<GameObject> platformPool = new Queue<GameObject>();
 
     void Start()
     {
-        // ÆÄÀÌ½ãÀÇ for i in range(20): ¿Í µ¿ÀÏÇÑ ¹İº¹¹®ÀÔ´Ï´Ù.
+        // íŒŒì´ì¬ì˜ for i in range(20): ì™€ ë™ì¼í•œ ë°˜ë³µë¬¸ì…ë‹ˆë‹¤.
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject obj = Instantiate(platformPrefab); // ÇÁ¸®ÆÕÀ» º¹Á¦(Instantiate)
-            obj.SetActive(false); // È­¸é¿¡¼­ ÀÏ´Ü ¼û±è Ã³¸®
-            platformPool.Enqueue(obj); // ´ë±â¿­(Queue)¿¡ Áı¾î³Ö±â (ÆÄÀÌ½ãÀÇ append)
+            GameObject obj = Instantiate(platformPrefab); // í”„ë¦¬íŒ¹ì„ ë³µì œ(Instantiate)
+            obj.SetActive(false); // í™”ë©´ì—ì„œ ì¼ë‹¨ ìˆ¨ê¹€ ì²˜ë¦¬
+            platformPool.Enqueue(obj); // ëŒ€ê¸°ì—´(Queue)ì— ì§‘ì–´ë„£ê¸° (íŒŒì´ì¬ì˜ append)
         }
     }
 
-    // ´Ù¸¥ ½ºÅ©¸³Æ®¿¡¼­ "¹ßÆÇ ÇÏ³ª Áà!" ÇÒ ¶§ ½ÇÇàµÇ´Â ÇÔ¼ö
+    // ë‹¤ë¥¸ ìŠ¤í¬ë¦½íŠ¸ì—ì„œ "ë°œíŒ í•˜ë‚˜ ì¤˜!" í•  ë•Œ ì‹¤í–‰ë˜ëŠ” í•¨ìˆ˜
     public GameObject GetPoolItem()
     {
         if (platformPool.Count > 0)
         {
-            GameObject obj = platformPool.Dequeue(); // ´ë±â¿­¿¡¼­ ¸Ç ¾ÕÀÇ ÇÏ³ª¸¦ »­ (ÆÄÀÌ½ãÀÇ pop(0))
-            obj.SetActive(true); // È­¸é¿¡ º¸ÀÌ°Ô ÄÔ
+            GameObject obj = platformPool.Dequeue(); // ëŒ€ê¸°ì—´ì—ì„œ ë§¨ ì•ì˜ í•˜ë‚˜ë¥¼ ëºŒ (íŒŒì´ì¬ì˜ pop(0))
+            obj.SetActive(true); // í™”ë©´ì— ë³´ì´ê²Œ ì¼¬
             return obj;
         }
         else
         {
-            // ´ë±â¿­ 20°³¸¦ ´Ù ½á¼­ ºÎÁ·ÇÒ °æ¿ì, ºñ»ó¿ëÀ¸·Î »õ·Î ÇÏ³ª ¸¸µê
+            // ëŒ€ê¸°ì—´ 20ê°œë¥¼ ë‹¤ ì¨ì„œ ë¶€ì¡±í•  ê²½ìš°, ë¹„ìƒìš©ìœ¼ë¡œ ìƒˆë¡œ í•˜ë‚˜ ë§Œë“¦
             GameObject obj = Instantiate(platformPrefab);
             obj.SetActive(true);
             return obj;
         }
     }
 
-    // ´Ù ¾´ ¹ßÆÇÀ» ÆÄ±«ÇÏÁö ¾Ê°í ´Ù½Ã ´ë±â¿­·Î µ¹·Áº¸³»´Â ÇÔ¼ö
+    // ë‹¤ ì“´ ë°œíŒì„ íŒŒê´´í•˜ì§€ ì•Šê³  ë‹¤ì‹œ ëŒ€ê¸°ì—´ë¡œ ëŒë ¤ë³´ë‚´ëŠ” í•¨ìˆ˜
     public void ReturnToPool(GameObject obj)
     {
-        obj.SetActive(false); // ´Ù½Ã ¼û±è
-        platformPool.Enqueue(obj); // ´ë±â¿­ ¸Ç µÚ¿¡ ÁÙ ¼¼¿ì±â
+        obj.SetActive(false); // ë‹¤ì‹œ ìˆ¨ê¹€
+        platformPool.Enqueue(obj); // ëŒ€ê¸°ì—´ ë§¨ ë’¤ì— ì¤„ ì„¸ìš°ê¸°
     }
 }
