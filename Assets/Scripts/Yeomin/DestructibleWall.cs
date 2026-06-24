@@ -15,9 +15,9 @@ public class DestructibleWall : MonoBehaviour
     }
 
     // PlayerController에서 연타를 감지하면 부를 함수
-    public void TakeDamage()
+    public bool TakeDamage()
     {
-        if (hp <= 0) return; // 이미 파괴 중이면 중복 실행 방지
+        if (hp <= 0) return false; // 이미 파괴 중이면 중복 실행 방지
 
         hp--; // 체력 1 감소
 
@@ -34,6 +34,9 @@ public class DestructibleWall : MonoBehaviour
 
             // 체력이 0이 되면 파괴!
             Destroy(gameObject);
+
+            return true;
         }
+        return false;
     }
 }
