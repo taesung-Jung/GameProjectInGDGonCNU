@@ -5,6 +5,9 @@ public class JumpState : IPlayerState
     private PlayerController player;
     private int jumpCount = 0;
 
+    private float elapsedTime = 0f;
+    private const float GROUND_CHECK_COOLDOWN = 0.1f; 
+
     public JumpState(PlayerController playerController)
     {
         this.player = playerController;
@@ -12,18 +15,20 @@ public class JumpState : IPlayerState
 
     public void Enter()
     {
+        player.anim.SetBool("Grounded", false);
+
+        elapsedTime = 0f;
+
         DoJump();
     }
 
     public void HandleInput()
     {
-        // 공중에서 한 번 더 클릭하면 2단 점프
         if (Input.GetMouseButtonDown(0) && jumpCount < 2)
         {
             DoJump();
         }
 
-        // 마우스 떼면 상승 속도 절반 (가변 점프)
         if (Input.GetMouseButtonUp(0) && player.rb.linearVelocity.y > 0)
         {
             player.rb.linearVelocity *= 0.5f;
@@ -33,22 +38,40 @@ public class JumpState : IPlayerState
     private void DoJump()
     {
         jumpCount++;
-        player.rb.linearVelocity = Vector2.zero;
+
+        player.rb.linearVelocity = new Vector2(player.rb.linearVelocity.x, 0);
+
         player.rb.AddForce(new Vector2(0, player.jumpForce));
         player.audioSource.Play();
     }
 
     public void UpdateState()
     {
-        // 다시 바닥에 떨어졌는지 체크 (간단하게 속도로 체크)
-        if (player.rb.linearVelocity.y == 0)
+        elapsedTime += Time.deltaTime;
+
+        float currentVelocityY = player.rb.linearVelocity.y;
+
+        if (elapsedTime >= GROUND_CHECK_COOLDOWN && currentVelocityY <= 0.01f)
         {
-            player.ChangeState(new RunState(player));
+            if (IsGrounded())
+            {
+                player.ChangeState(new RunState(player));
+            }
         }
+    }
+
+    private bool IsGrounded()
+    {
+        Vector2 colliderCenter = player.circleCollider.bounds.center;
+        float radius = player.circleCollider.radius;
+
+        RaycastHit2D hit = Physics2D.CircleCast(colliderCenter, radius * 0.9f, Vector2.down, radius * 0.3f, LayerMask.GetMask("Ground"));
+
+        return hit.collider != null;
     }
 
     public void Exit()
     {
-        player.anim.SetBool("Grounded", false);
+        player.anim.SetBool("Grounded", true);
     }
 }

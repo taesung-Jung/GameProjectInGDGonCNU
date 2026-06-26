@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public float jumpForce = 1f;
     public AudioClip deathClip;
+    public AudioClip slideClip;
+
+    public LayerMask groundLayer;
+    public float groundCheckDistance = 0.1f;
 
     [HideInInspector] public Rigidbody2D rb;
     [HideInInspector] public Animator anim;
@@ -34,6 +38,18 @@ public class PlayerController : MonoBehaviour
         currentState?.UpdateState();
     }
 
+    public bool IsGrounded()
+    {
+        Vector2 position = (Vector2)transform.position + circleCollider.offset;
+        float radius = circleCollider.radius;
+
+        RaycastHit2D hit = Physics2D.Raycast(position + Vector2.down * radius, Vector2.down, groundCheckDistance, groundLayer);
+
+        Debug.DrawRay(position + Vector2.down * radius, Vector2.down * groundCheckDistance, Color.red);
+
+        return hit.collider != null;
+    }
+
     public void ChangeState(IPlayerState newState)
     {
         currentState?.Exit();
@@ -59,10 +75,8 @@ public class PlayerController : MonoBehaviour
             Die();
         }
 
-    // 추가: 벽 파괴 구역(Trigger)에 닿으면 BreakState 진입
         if (other.CompareTag("BreakZone"))
         {
-            // 장애물이 아직 없으므로 임시로 null 넘김
             ChangeState(new BreakState(this, null));
         }
 

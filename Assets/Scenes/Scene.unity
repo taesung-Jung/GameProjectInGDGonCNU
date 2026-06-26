@@ -226,8 +226,8 @@ GameObject:
   - component: {fileID: 275476052}
   - component: {fileID: 275476051}
   - component: {fileID: 275476057}
-  - component: {fileID: 275476059}
   - component: {fileID: 275476058}
+  - component: {fileID: 275476059}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -505,6 +505,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   jumpForce: 700
   deathClip: {fileID: 0}
+  slideClip: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  groundCheckDistance: 0.1
   rb: {fileID: 0}
   anim: {fileID: 0}
   audioSource: {fileID: 0}
@@ -715,7 +720,7 @@ GameObject:
   - component: {fileID: 645490894}
   - component: {fileID: 645490893}
   - component: {fileID: 645490892}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Start Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
