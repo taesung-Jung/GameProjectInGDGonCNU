@@ -13,6 +13,7 @@ public class FlightState : IPlayerState
 
     public void Enter()
     {
+        player.jumpCount = 0; // 모드 변경 시 점프 횟수 초기화
         player.anim.SetBool("IsFlying", true);
         player.rb.linearVelocity = Vector2.zero;
         player.rb.gravityScale = 0.8f;

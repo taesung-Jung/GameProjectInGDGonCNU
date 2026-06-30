@@ -3,10 +3,8 @@ using UnityEngine;
 public class JumpState : IPlayerState
 {
     private PlayerController player;
-    private int jumpCount = 0;
-
     private float elapsedTime = 0f;
-    private const float GROUND_CHECK_COOLDOWN = 0.1f; 
+    private const float GROUND_CHECK_COOLDOWN = 0.1f;
 
     public JumpState(PlayerController playerController)
     {
@@ -16,15 +14,16 @@ public class JumpState : IPlayerState
     public void Enter()
     {
         player.anim.SetBool("Grounded", false);
-
         elapsedTime = 0f;
 
+        // 점프 시작 시 DoJump 호출
         DoJump();
     }
 
     public void HandleInput()
     {
-        if (Input.GetMouseButtonDown(0) && jumpCount < 2)
+        // PlayerController의 jumpCount를 참조하여 2단 점프 체크
+        if (Input.GetMouseButtonDown(0) && player.jumpCount < 2)
         {
             DoJump();
         }
@@ -37,10 +36,9 @@ public class JumpState : IPlayerState
 
     private void DoJump()
     {
-        jumpCount++;
+        player.jumpCount++; // PlayerController의 jumpCount 증가
 
         player.rb.linearVelocity = new Vector2(player.rb.linearVelocity.x, 0);
-
         player.rb.AddForce(new Vector2(0, player.jumpForce));
         player.audioSource.Play();
     }
@@ -48,7 +46,6 @@ public class JumpState : IPlayerState
     public void UpdateState()
     {
         elapsedTime += Time.deltaTime;
-
         float currentVelocityY = player.rb.linearVelocity.y;
 
         if (elapsedTime >= GROUND_CHECK_COOLDOWN && currentVelocityY <= 0.01f)
@@ -65,7 +62,7 @@ public class JumpState : IPlayerState
         Vector2 colliderCenter = player.circleCollider.bounds.center;
         float radius = player.circleCollider.radius;
 
-        RaycastHit2D hit = Physics2D.CircleCast(colliderCenter, radius * 0.9f, Vector2.down, radius * 0.3f, LayerMask.GetMask("Ground"));
+        RaycastHit2D hit = Physics2D.CircleCast(colliderCenter, radius * 0.9f, Vector2.down, radius * 0.8f, player.groundLayer);
 
         return hit.collider != null;
     }

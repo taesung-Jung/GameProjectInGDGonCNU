@@ -16,6 +16,11 @@ public class PlayerController : MonoBehaviour
 
     private IPlayerState currentState;
     public bool isDead = false;
+    public int jumpCount = 0;
+
+    // --- 벽 파괴를 위한 변수 추가 ---
+    private DestructibleWall currentTouchingWall;
+    // ----------------------------
 
     void Awake()
     {
@@ -34,9 +39,36 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) return;
 
+        // 벽 파괴 로직: 좌클릭 시 닿아있는 벽에 데미지 전달
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (currentTouchingWall != null)
+            {
+                currentTouchingWall.TakeDamage();
+            }
+        }
+
         currentState?.HandleInput();
         currentState?.UpdateState();
     }
+
+    // --- 충돌 감지 로직 추가 ---
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            currentTouchingWall = collision.gameObject.GetComponent<DestructibleWall>();
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            currentTouchingWall = null;
+        }
+    }
+    // -------------------------
 
     public bool IsGrounded()
     {
@@ -73,16 +105,6 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Dead") || other.CompareTag("Obstacle"))
         {
             Die();
-        }
-
-        if (other.CompareTag("BreakZone"))
-        {
-            ChangeState(new BreakState(this, null));
-        }
-
-        if (other.CompareTag("FlightZone"))
-        {
-            ChangeState(new FlightState(this));
         }
     }
 }

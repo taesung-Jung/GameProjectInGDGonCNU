@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 14234278665846208}
   - component: {fileID: 1664968005813680455}
   - component: {fileID: 6943432732196510334}
-  - component: {fileID: 8830781385158951670}
+  - component: {fileID: 9060473477901394785}
   m_Layer: 0
   m_Name: DestructibleWall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -81,11 +81,10 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -451410333
-  m_SortingLayer: 2
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
-    type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.9811321, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -153,7 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 649efa25ad21f497fb803a5b36ada1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScrollingObject
---- !u!114 &8830781385158951670
+  destroyXPosition: -20
+--- !u!114 &9060473477901394785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 422118836550327498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c141fe1213892f40b48b7349bd17d8f, type: 3}
+  m_Script: {fileID: 11500000, guid: fb4683f86578f604598cd4febbf99c4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestructibleWall
-  hp: 10
+  hp: 8

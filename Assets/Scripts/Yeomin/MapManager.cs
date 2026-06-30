@@ -1,62 +1,83 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class MapManager : MonoBehaviour
 {
-    [Header("UI ¼³Á¤")]
+    [Header("UI ì„¤ì •")]
     public GameObject warningText;
 
-    [Header("¼Óµµ ¼³Á¤")]
-    public float normalSpeed = 7.0f; // Æò¼Ò ´Ş¸®±â ¼Óµµ
-    public float slowSpeed = 4.0f;   // ÆÄ±«º® ¸ğµåÀÏ ¶§ ´À¸° ¼Óµµ
+    [Header("ì†ë„ ì„¤ì •")]
+    public float normalSpeed = 7.0f;
+    public float slowSpeed = 4.0f;
 
-    [Header("¸ğµå ½ÃÀÛ Á¶°Ç")]
-    public float timeToWallMode = 20.0f;
+    [Header("ëª¨ë“œ ì„¤ì •")]
+    public float minModeTime = 8.0f;  // ìµœì†Œ ëª¨ë“œ ìœ ì§€ ì‹œê°„
+    public float maxModeTime = 15.0f; // ìµœëŒ€ ëª¨ë“œ ìœ ì§€ ì‹œê°„
+
     private float timer = 0f;
-    private bool isWallModeStarted = false;
+    private float nextModeTime;
+    private int currentMode = 0; // 0: Normal, 1: Wall, 2: Flight
 
-    // ¿ÜºÎ ÂüÁ¶
     public PlatformSpawner platformSpawner;
+    public PlayerController player;
 
     void Start()
     {
-        // °ÔÀÓ ½ÃÀÛ ½Ã Æò¼Ò ¼Óµµ¸¦ ½ºÆ÷³Ê¿¡ Àü´Ş
-        platformSpawner.currentSpeed = normalSpeed;
+        timer = 0f;
+        nextModeTime = 9999f; // í…ŒìŠ¤íŠ¸ ì¤‘ì— ëª¨ë“œê°€ ì•ˆ ë°”ë€Œë„ë¡ ì•„ì£¼ ê¸¸ê²Œ ì„¤ì •
+
+        // ğŸ‘‡ ì—¬ê¸°ì„œ í…ŒìŠ¤íŠ¸í•˜ê³  ì‹¶ì€ ëª¨ë“œ ë”± í•˜ë‚˜ë§Œ ì£¼ì„ì„ í’€ê³  ì‹¤í–‰í•˜ì„¸ìš”! ğŸ‘‡
+
+        // 1. ì¼ë°˜ ì¥ì• ë¬¼(ë°œíŒ, ê¸°ë³¸ ê°€ì‹œ ë“±)ë§Œ ì£¼êµ¬ì¥ì°½ ì˜ ë‚˜ì˜¤ëŠ”ì§€ í…ŒìŠ¤íŠ¸í•  ë•Œ
+        platformSpawner.TriggerNormalMode(normalSpeed);
+
+        // 2. ë¹„í–‰ ì¥ì• ë¬¼(ìœ„ì•„ë˜ ê¸°ë‘¥)ë§Œ ì­ˆìš± ì˜ ë‚˜ì˜¤ëŠ”ì§€ í…ŒìŠ¤íŠ¸í•  ë•Œ (ì´ê±¸ í…ŒìŠ¤íŠ¸í•  ë• ìœ„ 1ë²ˆì„ ì£¼ì„ ì²˜ë¦¬í•˜ì„¸ìš”)
+        //platformSpawner.TriggerFlightMode(normalSpeed);
+
+        // 3. íŒŒê´´ë²½ë§Œ ì˜ ë‚˜ì˜¤ëŠ”ì§€ í…ŒìŠ¤íŠ¸í•  ë•Œ (ì´ê±¸ í…ŒìŠ¤íŠ¸í•  ë• ìœ„ 1ë²ˆì„ ì£¼ì„ ì²˜ë¦¬í•˜ì„¸ìš”)
+        //platformSpawner.TriggerWallMode(slowSpeed);
     }
 
     void Update()
     {
-        if (!isWallModeStarted)
+        // ğŸš§ ì¥ì• ë¬¼ ìƒì„± í…ŒìŠ¤íŠ¸ë¥¼ í•˜ëŠ” ë™ì•ˆì—ëŠ” ëª¨ë“œê°€ ë°”ë€Œë©´ ì•ˆ ë˜ë‹ˆê¹Œ ì£¼ì„ ì²˜ë¦¬! ğŸš§
+        /*
+        timer += Time.deltaTime;
+        if (timer >= nextModeTime)
         {
-            timer += Time.deltaTime;
-            if (timer >= timeToWallMode)
-            {
-                StartWallMode();
-            }
+            ChangeMode();
+        }
+        */
+    }
+
+    void ChangeMode()
+    {
+        timer = 0f;
+        nextModeTime = Random.Range(minModeTime, maxModeTime);
+        currentMode = Random.Range(0, 3);
+
+        switch (currentMode)
+        {
+            case 0: // ì¼ë°˜ ëª¨ë“œ
+                platformSpawner.TriggerNormalMode(normalSpeed);
+                player.ChangeState(new RunState(player));
+                break;
+            case 1: // íŒŒê´´ë²½ ëª¨ë“œ
+                StartCoroutine(ShowWarningRoutine());
+                platformSpawner.TriggerWallMode(slowSpeed);
+                break;
+            case 2: // ë¹„í–‰ ëª¨ë“œ
+                platformSpawner.TriggerFlightMode(normalSpeed);
+                player.ChangeState(new FlightState(player));
+                break;
         }
     }
 
-    void StartWallMode()
-    {
-        isWallModeStarted = true;
-
-        StartCoroutine(ShowWarningRoutine());
-
-        //  ½ºÆ÷³Ê¿¡°Ô ´À¸° ¼Óµµ Áö½Ã ¹× ÆÄ±«º® ¸ğµå Æ®¸®°Å
-        platformSpawner.TriggerWallMode(slowSpeed);
-    }
-
-    //  (½Å±Ô) ÆÄ±«º®ÀÌ ºÎ¼­Áö¸é ÀÌ ÇÔ¼ö°¡ È£ÃâµË´Ï´Ù.
     public void EndWallMode()
     {
-        Debug.Log("MapManager: º® ÆÄ±« È®ÀÎ! Æò¼Ò ¸ğµå·Î º¹±ÍÇÕ´Ï´Ù.");
-
-        // ½ºÆ÷³Ê¿¡°Ô Æò¼Ò ¼Óµµ·Î º¹±Í ¸í·É ¹× ÆÄ±«º® ¸ğµå Á¾·á
         platformSpawner.TriggerNormalMode(normalSpeed);
-
-        // Å¸ÀÌ¸Ó ¸®¼Â ¹× ½ºÀ§Ä¡ ²¨¼­ ´Ù½Ã ½Ã°£ÀÌ Èå¸£¸é º® ¸ğµå°¡ µÇ°Ô ÇÔ
+        player.ChangeState(new RunState(player));
         timer = 0f;
-        isWallModeStarted = false;
     }
 
     IEnumerator ShowWarningRoutine()

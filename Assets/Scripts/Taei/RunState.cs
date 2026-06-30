@@ -11,6 +11,9 @@ public class RunState : IPlayerState
 
     public void Enter()
     {
+        // 착지 시 점프 횟수를 0으로 초기화하여 다시 2단 점프가 가능하게 합니다.
+        player.jumpCount = 0;
+
         player.anim.SetBool("Grounded", true);
     }
 

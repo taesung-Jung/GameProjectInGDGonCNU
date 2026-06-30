@@ -15,6 +15,7 @@ public class BreakState : IPlayerState
 
     public void Enter()
     {
+        player.jumpCount = 0; // 모드 변경 시 점프 횟수 초기화
         runSpeed = player.rb.linearVelocity.x;
         if (runSpeed < 5f) runSpeed = 8f;
 

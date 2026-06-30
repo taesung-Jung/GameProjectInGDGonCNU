@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlatformSpawner : MonoBehaviour
@@ -7,10 +8,10 @@ public class PlatformSpawner : MonoBehaviour
     public List<GameObject> platformPrefabs;
     public float platformLength = 10.0f;
 
-    [Header("평소 속도 (초기값만 씁니다)")]
-    public float currentSpeed = 7.0f; // MapManager가 실시간으로 조절합니다.
+    [Header("평소 속도")]
+    public float currentSpeed = 7.0f;
 
-    [Header("간격 및 장애물 설정 (평소 전용)")]
+    [Header("간격 및 장애물 설정")]
     public float gapDistance = 3.0f;
     public GameObject obstaclePrefab;
     public float obstacleOffsetY = 1.0f;
@@ -20,59 +21,106 @@ public class PlatformSpawner : MonoBehaviour
     public GameObject longPlatformPrefab;
     public float longPlatformLength = 50.0f;
 
+    [Header("비행 모드 설정")]
+    public GameObject flightObstaclePrefab;
+    public float flightSpawnInterval = 1.5f;
+    public float minFlightY = -3.0f;
+    public float maxFlightY = 3.0f;
+    public Transform spawnPoint;
+
     private bool isWallMode = false;
     private bool hasSpawnedWall = false;
+    private bool isFlightMode = false;
 
     private GameObject lastSpawnedPlatform;
     private Vector3 initialSpawnPosition;
     private int spawnCount = 0;
 
-    // 풀매니저 변수
     private PoolManager poolManager;
 
     void Start()
     {
-        // 씬에 있는 기존 PoolManager를 찾아서 자동으로 연결합니다.
         poolManager = FindObjectOfType<PoolManager>();
-
         initialSpawnPosition = transform.position;
 
-        foreach (GameObject platformPrefab in platformPrefabs)
-        {
-            SpawnPlatform(platformPrefab);
-        }
-    }
-
-    void Update()
-    {
-        // 마지막 발판이 기준점(initialSpawnPosition)을 지나가면 새 발판 생성
-        if (lastSpawnedPlatform != null && lastSpawnedPlatform.transform.position.x < initialSpawnPosition.x)
+        // 시작하자마자 기본 발판 몇 개 깔아두기
+        for (int i = 0; i < 3; i++)
         {
             SpawnPlatform(platformPrefabs[0]);
         }
     }
 
-    // MapManager가 부르는 모드 시작 함수
+    void Update()
+    {
+        //  핵심 포인트: 비행 모드가 아닐 때만 바닥 발판을 계속 이어 붙입니다!
+        if (!isFlightMode)
+        {
+            if (lastSpawnedPlatform != null && lastSpawnedPlatform.transform.position.x < initialSpawnPosition.x)
+            {
+                SpawnPlatform(platformPrefabs[0]);
+            }
+        }
+    }
+
     public void TriggerWallMode(float speed)
     {
         isWallMode = true;
+        isFlightMode = false;
         hasSpawnedWall = false;
         currentSpeed = speed;
     }
 
-    // MapManager가 부르는 모드 종료 함수
-    public void TriggerNormalMode(float speed)
+    public void TriggerFlightMode(float speed)
     {
+        Debug.Log(" 비행 모드 발동! 바닥 생성을 멈추고 기둥을 소환합니다.");
+        isFlightMode = true;
         isWallMode = false;
         currentSpeed = speed;
+
+        StartCoroutine(SpawnFlightObstacleRoutine());
+    }
+
+    public void TriggerNormalMode(float speed)
+    {
+        // 비행 모드에서 일반 모드로 돌아올 때 허공에서 떨어지지 않게 바닥을 강제로 하나 깔아줌
+        if (isFlightMode)
+        {
+            lastSpawnedPlatform = Instantiate(platformPrefabs[0], initialSpawnPosition + new Vector3(platformLength, 0, 0), Quaternion.identity);
+        }
+
+        isWallMode = false;
+        isFlightMode = false;
+        currentSpeed = speed;
         spawnCount = 0;
+
+        StopAllCoroutines();
+    }
+
+    IEnumerator SpawnFlightObstacleRoutine()
+    {
+        // 안전 장치: 프리팹이나 스폰 포인트가 비어있으면 에러 띄우기
+        if (flightObstaclePrefab == null || spawnPoint == null)
+        {
+            Debug.LogError(" 비행 장애물 프리팹이나 SpawnPoint가 연결되지 않았습니다! 인스펙터를 확인하세요.");
+            yield break;
+        }
+
+        while (isFlightMode)
+        {
+            float randomY = Random.Range(minFlightY, maxFlightY);
+            Vector3 spawnPosition = new Vector3(spawnPoint.position.x, randomY, 0);
+
+            GameObject obstacle = Instantiate(flightObstaclePrefab, spawnPosition, Quaternion.identity);
+            obstacle.name = flightObstaclePrefab.name;
+
+            yield return new WaitForSeconds(flightSpawnInterval);
+        }
     }
 
     void SpawnPlatform(GameObject platformPrefab)
     {
         Vector3 spawnPos = initialSpawnPosition;
 
-        // 1. 발판 틈새(Pivot) 보정 계산
         if (lastSpawnedPlatform != null)
         {
             float lastHalf = (lastSpawnedPlatform.name.Contains("Long")) ? longPlatformLength / 2f : platformLength / 2f;
@@ -84,7 +132,6 @@ public class PlatformSpawner : MonoBehaviour
 
         GameObject platform = null;
 
-        // 2. 발판 소환 (파괴벽 모드든 평소 모드든, 기본 발판이면 무조건 대기열에서 꺼내옴!)
         if (poolManager != null && platformPrefab == platformPrefabs[0])
         {
             platform = poolManager.GetPoolItem();
@@ -92,17 +139,14 @@ public class PlatformSpawner : MonoBehaviour
         }
         else
         {
-            // 긴 발판 등 특수한 경우에만 새로 생성
             platform = Instantiate(platformPrefab, spawnPos, Quaternion.identity);
         }
 
         platform.name = platformPrefab.name;
         lastSpawnedPlatform = platform;
 
-        // 3. 모드별 기믹 추가 (파괴벽 or 가시)
         if (isWallMode)
         {
-            // 파괴벽 모드: 발판 틈새 없이 깔면서 거대 벽 소환
             if (!hasSpawnedWall)
             {
                 Vector3 wallSpawnPos = spawnPos + new Vector3(15f, 0f, 0f);
@@ -112,14 +156,16 @@ public class PlatformSpawner : MonoBehaviour
         }
         else
         {
-
-            // 평소 모드: 가시 장애물 무작위 생성
-            spawnCount++;
-            if (spawnCount > 2 && Random.Range(0f, 1f) < 0.6f)
+            // 비행 모드가 아닐 때만 가시 생성
+            if (!isFlightMode)
             {
-                Vector3 obstacleSpawnPos = spawnPos + new Vector3(0f, obstacleOffsetY, 0f);
-                GameObject obs = Instantiate(obstaclePrefab, obstacleSpawnPos, Quaternion.identity);
-                obs.transform.SetParent(platform.transform);
+                spawnCount++;
+                if (spawnCount > 2 && Random.Range(0f, 1f) < 0.6f)
+                {
+                    Vector3 obstacleSpawnPos = spawnPos + new Vector3(0f, obstacleOffsetY, 0f);
+                    GameObject obs = Instantiate(obstaclePrefab, obstacleSpawnPos, Quaternion.identity);
+                    obs.transform.SetParent(platform.transform);
+                }
             }
         }
     }
