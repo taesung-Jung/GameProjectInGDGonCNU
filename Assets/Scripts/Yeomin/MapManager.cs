@@ -40,13 +40,18 @@ public class MapManager : MonoBehaviour
 
     void Update()
     {
-        // 🚧 장애물 생성 테스트를 하는 동안에는 모드가 바뀌면 안 되니까 주석 처리! 🚧
+        //  장애물 생성 테스트를 하는 동안에는 모드가 바뀌면 안 되니까 주석 처리! 
         /*
-        timer += Time.deltaTime;
-        if (timer >= nextModeTime)
-        {
-            ChangeMode();
-        }
+         // 벽 모드 중일 때는 타이머를 아예 멈추거나, 
+    // 모드 전환 시점을 판단하는 if문에 조건을 추가합니다.
+    if (isWallModeActive) return; // 벽 모드라면 시간 기반 전환 로직을 아예 건너뜀
+
+    timer += Time.deltaTime;
+    if (timer >= nextModeTime)
+    {
+        // 여기서 일반 모드나 Flight 모드로 전환하는 기존 로직 실행
+        ChangeToNextMode(); 
+    }
         */
     }
 
