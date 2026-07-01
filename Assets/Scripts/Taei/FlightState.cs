@@ -65,5 +65,14 @@ public class FlightState : IPlayerState
     {
         player.anim.SetBool("IsFlying", false);
         player.rb.gravityScale = 2.0f;
+
+        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+        foreach (GameObject obj in obstacles)
+        {
+            if (obj.transform.position.x > player.transform.position.x)
+            {
+                Object.Destroy(obj);
+            }
+        }
     }
 }
