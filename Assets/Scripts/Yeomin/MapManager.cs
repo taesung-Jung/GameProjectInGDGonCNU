@@ -70,6 +70,16 @@ public class MapManager : MonoBehaviour
             case 1: // 파괴벽 모드
                 StartCoroutine(ShowWarningRoutine());
                 platformSpawner.TriggerWallMode(slowSpeed);
+
+                //추가
+                PlayerController targetPlayer = Object.FindFirstObjectByType<PlayerController>();
+                DestructibleWall spawnedWall = Object.FindFirstObjectByType<DestructibleWall>();
+
+                if (targetPlayer != null)
+                { 
+                    targetPlayer.ChangeState(new BreakState(targetPlayer, spawnedWall));
+                }
+
                 break;
             case 2: // 비행 모드
                 platformSpawner.TriggerFlightMode(normalSpeed);

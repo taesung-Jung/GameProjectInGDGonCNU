@@ -18,9 +18,14 @@ public class PlayerController : MonoBehaviour
     public bool isDead = false;
     public int jumpCount = 0;
 
-    // --- 벽 파괴를 위한 변수 추가 ---
-    private DestructibleWall currentTouchingWall;
-    // ----------------------------
+    public DestructibleWall currentTouchingWall;
+
+    [Header("Random State Change Settings")]
+    public float minRunTime = 10f;
+    public float maxRunTime = 30f;
+
+    private float stateTimer = 0f;
+    private float targetChangeTime = 0f;
 
     void Awake()
     {
@@ -33,78 +38,132 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         ChangeState(new RunState(this));
+        ResetRunTimer();
     }
 
     void Update()
     {
         if (isDead) return;
 
-        // 벽 파괴 로직: 좌클릭 시 닿아있는 벽에 데미지 전달
-        if (Input.GetMouseButtonDown(0))
+        Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
+        if (viewportPos.x < 0f)
         {
-            if (currentTouchingWall != null)
-            {
-                currentTouchingWall.TakeDamage();
-            }
+            Debug.LogWarning("[사망] 화면 이탈");
+            Die();
+            return;
         }
 
+        if (currentState != null)
+        {
+            if (currentState.GetType() != typeof(FlightState) && currentState.GetType() != typeof(BreakState))
+            {
+                stateTimer += Time.deltaTime;
+
+                if (stateTimer >= targetChangeTime)
+                {
+                    MapManager mapManager = FindObjectOfType<MapManager>();
+                    if (mapManager != null)
+                    {
+                        mapManager.Invoke("ChangeMode", 0f);
+                    }
+                    ResetRunTimer();
+                }
+            }
+        }
         currentState?.HandleInput();
         currentState?.UpdateState();
     }
 
-    // --- 충돌 감지 로직 추가 ---
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void ResetRunTimer()
     {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            currentTouchingWall = collision.gameObject.GetComponent<DestructibleWall>();
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            currentTouchingWall = null;
-        }
-    }
-    // -------------------------
-
-    public bool IsGrounded()
-    {
-        Vector2 position = (Vector2)transform.position + circleCollider.offset;
-        float radius = circleCollider.radius;
-
-        RaycastHit2D hit = Physics2D.Raycast(position + Vector2.down * radius, Vector2.down, groundCheckDistance, groundLayer);
-
-        Debug.DrawRay(position + Vector2.down * radius, Vector2.down * groundCheckDistance, Color.red);
-
-        return hit.collider != null;
+        stateTimer = 0f;
+        if (minRunTime > maxRunTime) minRunTime = maxRunTime;
+        targetChangeTime = Random.Range(minRunTime, maxRunTime);
     }
 
     public void ChangeState(IPlayerState newState)
     {
+        if (newState == null || isDead) return;
+
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
     }
 
-    public void Die()
+
+    private void OnCollisionEnter2D(Collision2D col)
     {
-        isDead = true;
-        anim.SetTrigger("Die");
-        audioSource.clip = deathClip;
-        audioSource.Play();
-        rb.linearVelocity = Vector2.zero;
+        if (col.gameObject.CompareTag("Wall"))
+        {
+            currentTouchingWall = col.gameObject.GetComponent<DestructibleWall>();
+            return;
+        }
+        CheckDeath(col.gameObject);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionExit2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Wall")) currentTouchingWall = null;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) => CheckDeath(other.gameObject);
+
+    private void CheckDeath(GameObject obj)
+    {
+        if (obj.name.Contains("GameObject") || obj.name.Contains("Dead"))
+        {
+            Debug.LogWarning("[사망] 추락");
+            Die();
+            return;
+        }
+
+        if (obj.name.Contains("Platform"))
+        {
+            return;
+        }
+
+        if (obj.CompareTag("Obstacle") || obj.GetComponent<ScrollingObject>() != null)
+        {
+            Debug.LogWarning("[사망] 장애물 충돌");
+            Die();
+            return;
+        }
+    }
+
+    public bool IsGrounded()
+    {
+        Vector2 position = (Vector2)transform.position + circleCollider.offset;
+        float radius = circleCollider.radius;
+        RaycastHit2D hit = Physics2D.Raycast(position + Vector2.down * radius, Vector2.down, groundCheckDistance, groundLayer);
+        return hit.collider != null;
+    }
+
+    public void Die()
     {
         if (isDead) return;
+        isDead = true;
+        anim.SetTrigger("Die");
 
-        if (other.CompareTag("Dead") || other.CompareTag("Obstacle"))
+        if (audioSource != null && deathClip != null)
         {
-            Die();
+            audioSource.clip = deathClip;
+            audioSource.Play();
+        }
+        rb.linearVelocity = Vector2.zero;
+
+        PlatformSpawner spawner = Object.FindFirstObjectByType<PlatformSpawner>();
+        if (spawner != null)
+        {
+            spawner.currentSpeed = 0f;
+        }
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.isGameover = true;
+            if (GameManager.instance.gameoverUI != null)
+            {
+                GameManager.instance.gameoverUI.SetActive(true);
+            }
         }
     }
 }
