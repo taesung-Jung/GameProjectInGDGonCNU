@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -165,5 +166,7 @@ public class PlayerController : MonoBehaviour
                 GameManager.instance.gameoverUI.SetActive(true);
             }
         }
+
+        GameObject.Find("SceneCanvas").GetComponent<Scenemanager>().Gameover();
     }
 }

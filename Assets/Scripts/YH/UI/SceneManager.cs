@@ -35,7 +35,7 @@ public class Scenemanager : MonoBehaviour
     public void ScenePass_ToGamePage()
     {
         ready = true;
-        SceneManager.LoadScene("GamePage");
+        SceneManager.LoadScene("MapTest_Yeomin");
         transform.GetComponent<Loading>().LoadEnd();
     }
 
