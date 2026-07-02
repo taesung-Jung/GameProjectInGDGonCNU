@@ -12,6 +12,8 @@ public class ToLobby : MonoBehaviour
     {
         if (scene.GetComponent<Loading>().loading) 
             return;
+        
+        scene.GetComponent<Scenemanager>().stop();
         Time.timeScale = 1f;
         scene.GetComponent<Loading>().LoadStart();
         Invoke("LoadScene",2f);

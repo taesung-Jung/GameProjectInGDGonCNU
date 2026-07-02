@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     private IPlayerState currentState;
     public bool isDead = false;
+    public bool ignoreInput = false;
     public int jumpCount = 0;
 
     public DestructibleWall currentTouchingWall;
@@ -45,11 +46,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (isDead) return;
+        if (GameObject.Find("SceneCanvas").GetComponent<Scenemanager>().ready) return;
 
         Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
         if (viewportPos.x < 0f)
         {
-            Debug.LogWarning("[»ç¸Á] È­¸é ÀÌÅ»");
+            Debug.LogWarning("[ï¿½ï¿½ï¿½] È­ï¿½ï¿½ ï¿½ï¿½Å»");
             Die();
             return;
         }
@@ -113,7 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         if (obj.name.Contains("GameObject") || obj.name.Contains("Dead"))
         {
-            Debug.LogWarning("[»ç¸Á] Ãß¶ô");
+            Debug.LogWarning("[ï¿½ï¿½ï¿½] ï¿½ß¶ï¿½");
             Die();
             return;
         }
@@ -125,7 +127,7 @@ public class PlayerController : MonoBehaviour
 
         if (obj.CompareTag("Obstacle") || obj.GetComponent<ScrollingObject>() != null)
         {
-            Debug.LogWarning("[»ç¸Á] Àå¾Ö¹° Ãæµ¹");
+            Debug.LogWarning("[ï¿½ï¿½ï¿½] ï¿½ï¿½Ö¹ï¿½ ï¿½æµ¹");
             Die();
             return;
         }

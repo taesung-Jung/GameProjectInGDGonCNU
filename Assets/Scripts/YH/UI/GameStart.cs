@@ -12,7 +12,10 @@ public class GameStart : MonoBehaviour
     {
         if (scene.GetComponent<Loading>().loading) 
             return;
-        Time.timeScale = 1.0f;
+        
+        if (GameObject.Find("Player") != null) 
+            scene.GetComponent<Scenemanager>().stop();
+        Time.timeScale = 1f;
         scene.GetComponent<Loading>().LoadStart();
         scene.GetComponent<Scenemanager>().ready = true;
         scene.GetComponent<Scenemanager>().End = false;

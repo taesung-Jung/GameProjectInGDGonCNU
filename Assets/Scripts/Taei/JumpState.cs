@@ -16,27 +16,31 @@ public class JumpState : IPlayerState
         player.anim.SetBool("Grounded", false);
         elapsedTime = 0f;
 
-        // Á¡ÇÁ ½ÃÀÛ ½Ã DoJump È£Ãâ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ DoJump È£ï¿½ï¿½
         DoJump();
     }
 
     public void HandleInput()
     {
-        // PlayerControllerÀÇ jumpCount¸¦ ÂüÁ¶ÇÏ¿© 2´Ü Á¡ÇÁ Ã¼Å©
+        // PlayerControllerï¿½ï¿½ jumpCountï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (Input.GetMouseButtonDown(0) && player.jumpCount < 2)
         {
+            if (player.ignoreInput)
+                return;
             DoJump();
         }
 
         if (Input.GetMouseButtonUp(0) && player.rb.linearVelocity.y > 0)
         {
+            if (player.ignoreInput)
+                return;
             player.rb.linearVelocity *= 0.5f;
         }
     }
 
     private void DoJump()
     {
-        player.jumpCount++; // PlayerControllerÀÇ jumpCount Áõ°¡
+        player.jumpCount++; // PlayerControllerï¿½ï¿½ jumpCount ï¿½ï¿½ï¿½ï¿½
 
         player.rb.linearVelocity = new Vector2(player.rb.linearVelocity.x, 0);
         player.rb.AddForce(new Vector2(0, player.jumpForce));
