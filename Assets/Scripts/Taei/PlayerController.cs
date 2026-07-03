@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
@@ -46,14 +46,23 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (isDead) return;
-        if (GameObject.Find("SceneCanvas").GetComponent<Scenemanager>().ready) return;
 
-        Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
-        if (viewportPos.x < 0f)
+        GameObject sceneCanvas = GameObject.Find("SceneCanvas");
+        if (sceneCanvas != null)
         {
-            Debug.LogWarning("[���] ȭ�� ��Ż");
-            Die();
-            return;
+            Scenemanager sm = sceneCanvas.GetComponent<Scenemanager>();
+            if (sm != null && sm.ready) return;
+        }
+
+        if (Camera.main != null)
+        {
+            Vector3 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
+            if (viewportPos.x < 0f)
+            {
+                Debug.LogWarning("[경고] 화면 이탈");
+                Die();
+                return;
+            }
         }
 
         if (currentState != null)
@@ -169,6 +178,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        GameObject.Find("SceneCanvas").GetComponent<Scenemanager>().Gameover();
+        GameObject sceneCanvas = GameObject.Find("SceneCanvas");
+        if (sceneCanvas != null)
+        {
+            Scenemanager sm = sceneCanvas.GetComponent<Scenemanager>();
+            if (sm != null)
+            {
+                sm.Gameover();
+            }
+        }
     }
 }
