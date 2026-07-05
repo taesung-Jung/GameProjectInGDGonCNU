@@ -28,5 +28,7 @@ public class Ready : MonoBehaviour
         }
         GameObject.Find("SceneCanvas").GetComponent<Scenemanager>().ready = false;
         Destroy(_countPrefab);
+        PlatformSpawner spawner = FindObjectOfType<PlatformSpawner>();
+        spawner.StartSpawn();
     }
 }

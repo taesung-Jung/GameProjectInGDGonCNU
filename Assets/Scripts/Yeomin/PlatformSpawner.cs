@@ -38,24 +38,35 @@ public class PlatformSpawner : MonoBehaviour
 
     private PoolManager poolManager;
 
-    void Start()
-    {
-        poolManager = FindObjectOfType<PoolManager>();
-        initialSpawnPosition = transform.position;
+    private bool gameStarted = false;
+    public float spawnTriggerX = 10f;
 
-        // 시작하자마자 기본 발판 몇 개 깔아두기
+    public void StartSpawn()
+    {
+        if (gameStarted) return;
+
+        gameStarted = true;
+
         for (int i = 0; i < 3; i++)
         {
             SpawnPlatform(platformPrefabs[0]);
         }
     }
+    void Start()
+    {
+        poolManager = FindObjectOfType<PoolManager>();
+        initialSpawnPosition = transform.position;
+    }
 
     void Update()
     {
-        //  핵심 포인트: 비행 모드가 아닐 때만 바닥 발판을 계속 이어 붙입니다!
+        if (!gameStarted)
+            return;
+
         if (!isFlightMode)
         {
-            if (lastSpawnedPlatform != null && lastSpawnedPlatform.transform.position.x < initialSpawnPosition.x)
+            if (lastSpawnedPlatform != null &&
+                lastSpawnedPlatform.transform.position.x < spawnTriggerX)
             {
                 SpawnPlatform(platformPrefabs[0]);
             }

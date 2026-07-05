@@ -10,82 +10,121 @@ public class NetworkManager : MonoBehaviour
 
     void Start()
     {
-        // Firebase ÀÇÁ¸¼º Ã¼Å© ¹× ÃÊ±âÈ­
+        // Firebase ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å© ï¿½ï¿½ ï¿½Ê±ï¿½È­
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
             DependencyStatus dependencyStatus = task.Result;
 
             if (dependencyStatus == DependencyStatus.Available)
             {
-                // ScriptableObject ¿¡¼Â ·Îµå
-                // ¹İµå½Ã Resources/Config Æú´õ ¾È¿¡ FirebaseConfig.asset ÀÌ ÀÖ¾î¾ß ÇÔ
+                // ScriptableObject ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
+                // ï¿½İµï¿½ï¿½ Resources/Config ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ FirebaseConfig.asset ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½
                 FirebaseConfig config = Resources.Load<FirebaseConfig>("Config/FirebaseConfig");
 
                 if (config == null)
                 {
-                    Debug.LogError("[NetworkManager] Resources/Config/FirebaseConfig ¿¡¼ÂÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù! " +
-                                   "Resources Æú´õ¿¡ FirebaseConfig.asset À» »ı¼ºÇØÁÖ¼¼¿ä.");
+                    Debug.LogError("[NetworkManager] Resources/Config/FirebaseConfig ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! " +
+                                   "Resources ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ FirebaseConfig.asset ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
                     return;
                 }
 
-                // Firebase ÀÎ½ºÅÏ½º »ı¼º (URLÀ» Á÷Á¢ Àü´Ş)
+                // Firebase ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½ (URLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 dbRef = FirebaseDatabase.GetInstance(app, config.databaseUrl).RootReference;
 
-                Debug.Log($"[NetworkManager] Firebase Database ¿¬°á ¼º°ø! URL: {config.databaseUrl}");
+                Debug.Log($"[NetworkManager] Firebase Database ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! URL: {config.databaseUrl}");
             }
             else
             {
-                Debug.LogError($"[NetworkManager] Firebase ÀÇÁ¸¼ºÀ» ÇØ°áÇÒ ¼ö ¾ø½À´Ï´Ù: {dependencyStatus}");
+                Debug.LogError($"[NetworkManager] Firebase ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: {dependencyStatus}");
             }
         });
     }
 
     // -------------------------------------------------
-    // Á¡¼ö Àü¼Û
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void UploadScore(string playerName, int score)
     {
-        if (dbRef == null) { Debug.LogError("[NetworkManager] DB°¡ ÃÊ±âÈ­µÇÁö ¾Ê¾Ò½À´Ï´Ù."); return; }
+        if (dbRef == null)
+        {
+            Debug.LogError("[NetworkManager] DBê°€ ì´ˆê¸°í™”ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
+            return;
+        }
 
         UserData data = new UserData(playerName, score);
         string json = JsonUtility.ToJson(data);
         string userId = SystemInfo.deviceUniqueIdentifier;
 
+        Debug.Log($"[NetworkManager] UploadScore í˜¸ì¶œë¨");
+        Debug.Log($"[NetworkManager] ì €ì¥ ê²½ë¡œ: rankings/{userId}");
+        Debug.Log($"[NetworkManager] ì €ì¥ JSON: {json}");
+
         dbRef.Child("rankings").Child(userId).SetRawJsonValueAsync(json)
-            .ContinueWithOnMainThread(t => {
-                if (t.IsCompleted) Debug.Log("[NetworkManager] Á¡¼ö ¾÷·Îµå ¿Ï·á!");
+            .ContinueWithOnMainThread(t =>
+            {
+                if (t.IsCompleted)
+                    Debug.Log("[NetworkManager] ì ìˆ˜ ì—…ë¡œë“œ ì™„ë£Œ!");
             });
     }
 
     // -------------------------------------------------
-    // ·©Å· ¸®½ºÆ® ¹Ş¾Æ¿À±â (Äİ¹é ÇüÅÂ)
+    // ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ş¾Æ¿ï¿½ï¿½ï¿½ (ï¿½İ¹ï¿½ ï¿½ï¿½ï¿½ï¿½)
     public void FetchLeaderboard(System.Action<List<UserData>> onLoaded)
     {
-        if (dbRef == null) { Debug.LogError("[NetworkManager] DB°¡ ÃÊ±âÈ­µÇÁö ¾Ê¾Ò½À´Ï´Ù."); return; }
+        if (dbRef == null)
+        {
+            return;
+        }
+
+        
 
         dbRef.Child("rankings")
-             .OrderByChild("score")
-             .LimitToLast(10)
-             .GetValueAsync()
-             .ContinueWithOnMainThread(task => {
-                 if (task.IsFaulted)
-                 {
-                     Debug.LogError("[NetworkManager] ·©Å· µ¥ÀÌÅÍ¸¦ ¹Ş¾Æ¿À´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
-                     return;
-                 }
+            .OrderByChild("score")
+            .LimitToLast(10)
+            .GetValueAsync()
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    
+                    return;
+                }
 
-                 DataSnapshot snapshot = task.Result;
-                 List<UserData> list = new List<UserData>();
+                if (task.IsCanceled)
+                {
+                    
+                    return;
+                }
 
-                 foreach (var child in snapshot.Children)
-                 {
-                     string json = child.GetRawJsonValue();
-                     UserData user = JsonUtility.FromJson<UserData>(json);
-                     list.Add(user);
-                 }
+                DataSnapshot snapshot = task.Result;
 
-                 // ³ôÀº Á¡¼ö ¼øÀ¸·Î ³»¸²Â÷¼ø Á¤·Ä
-                 list.Reverse();
-                 onLoaded?.Invoke(list);
-             });
+                
+                List<UserData> list = new List<UserData>();
+
+                foreach (var child in snapshot.Children)
+                {
+                    string json = child.GetRawJsonValue();
+                    
+                    UserData user = JsonUtility.FromJson<UserData>(json);
+
+                    if (user == null)
+                    {
+                       continue;
+                    }
+
+                    
+                    list.Add(user);
+                }
+
+                list.Reverse();
+
+                Debug.Log($"[NetworkManager] ìµœì¢… ë¦¬ìŠ¤íŠ¸ ê°œìˆ˜ : {list.Count}");
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Debug.Log($"[NetworkManager] [{i}] {list[i].userName} / {list[i].score}");
+                }
+
+                onLoaded?.Invoke(list);
+            });
     }
 }

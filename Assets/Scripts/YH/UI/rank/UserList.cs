@@ -22,7 +22,7 @@ public class UserList : MonoBehaviour
         {
             if (i > 3)
             {
-                content.GetComponent<RectTransform>().sizeDelta += new Vector2(0, 110f);
+                content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 470 + 110 * i);
             }
             content.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -20 + -110*i);
         }
