@@ -43,47 +43,21 @@ public class PlatformSpawner : MonoBehaviour
         poolManager = FindObjectOfType<PoolManager>();
         initialSpawnPosition = transform.position;
 
-        if (longPlatformPrefab != null)
-        {
-            SpawnPlatform(longPlatformPrefab);
-        }
-        else if (platformPrefabs.Count > 0)
+        // 시작하자마자 기본 발판 몇 개 깔아두기
+        for (int i = 0; i < 3; i++)
         {
             SpawnPlatform(platformPrefabs[0]);
         }
     }
 
-    float GetHalfLength(GameObject platform)
-    {
-        if (platform == null) return platformLength / 2f;
-
-        if (platform.name.Contains("Long"))
-        {
-            return longPlatformLength / 2f;
-        }
-        return platformLength / 2f;
-    }
-
     void Update()
     {
-        GameObject sceneCanvas = GameObject.Find("SceneCanvas");
-        if (sceneCanvas != null)
+        //  핵심 포인트: 비행 모드가 아닐 때만 바닥 발판을 계속 이어 붙입니다!
+        if (!isFlightMode)
         {
-            Scenemanager sm = sceneCanvas.GetComponent<Scenemanager>();
-            if (sm != null && sm.ready) return;
-        }
-
-        if (!isFlightMode && lastSpawnedPlatform != null)
-        {
-            float lastHalf = GetHalfLength(lastSpawnedPlatform);
-            float rightEdgeX = lastSpawnedPlatform.transform.position.x + lastHalf;
-
-            if (rightEdgeX < initialSpawnPosition.x + 20.0f)
+            if (lastSpawnedPlatform != null && lastSpawnedPlatform.transform.position.x < initialSpawnPosition.x)
             {
-                if (platformPrefabs.Count > 0)
-                {
-                    SpawnPlatform(platformPrefabs[0]);
-                }
+                SpawnPlatform(platformPrefabs[0]);
             }
         }
     }
@@ -108,6 +82,7 @@ public class PlatformSpawner : MonoBehaviour
 
     public void TriggerNormalMode(float speed)
     {
+        // 비행 모드에서 일반 모드로 돌아올 때 허공에서 떨어지지 않게 바닥을 강제로 하나 깔아줌
         if (isFlightMode)
         {
             lastSpawnedPlatform = Instantiate(platformPrefabs[0], initialSpawnPosition + new Vector3(platformLength, 0, 0), Quaternion.identity);
@@ -123,6 +98,7 @@ public class PlatformSpawner : MonoBehaviour
 
     IEnumerator SpawnFlightObstacleRoutine()
     {
+        // 안전 장치: 프리팹이나 스폰 포인트가 비어있으면 에러 띄우기
         if (flightObstaclePrefab == null || spawnPoint == null)
         {
             Debug.LogError(" 비행 장애물 프리팹이나 SpawnPoint가 연결되지 않았습니다! 인스펙터를 확인하세요.");
@@ -147,8 +123,8 @@ public class PlatformSpawner : MonoBehaviour
 
         if (lastSpawnedPlatform != null)
         {
-            float lastHalf = GetHalfLength(lastSpawnedPlatform);
-            float currentHalf = GetHalfLength(platformPrefab);
+            float lastHalf = (lastSpawnedPlatform.name.Contains("Long")) ? longPlatformLength / 2f : platformLength / 2f;
+            float currentHalf = (platformPrefab.name.Contains("Long")) ? longPlatformLength / 2f : platformLength / 2f;
             float currentGap = isWallMode ? 0f : gapDistance;
 
             spawnPos = lastSpawnedPlatform.transform.position + new Vector3(lastHalf + currentHalf + currentGap, 0f, 0f);
@@ -180,6 +156,7 @@ public class PlatformSpawner : MonoBehaviour
         }
         else
         {
+            // 비행 모드가 아닐 때만 가시 생성
             if (!isFlightMode)
             {
                 spawnCount++;
